@@ -1,14 +1,16 @@
+import java.util.Scanner;
+
 /**
  * FactoryRobotHazardAnalyzer
  *
- * UC4: Introduce Validation Using Conditional Logic
+ * UC5: Refactor Validation and Calculation into Separate Method
  *
  * This program:
- * - Accepts hazard-related inputs
- * - Validates input ranges using if-else statements
- * - Calculates hazard risk only if inputs are valid
+ * - Collects user input in main()
+ * - Delegates validation and hazard calculation to a separate method
+ * - Returns hazard risk score if inputs are valid
  */
-import java.util.Scanner;
+
 public class FactoryRobotHazardAnalyzer {
 
     public static void main(String[] args) {
@@ -26,16 +28,36 @@ public class FactoryRobotHazardAnalyzer {
         System.out.println("Enter Machinery State (Worn/Faulty/Critical):");
         String machineryState = scanner.nextLine();
 
-        // ===== Validation Section =====
+        double hazardRisk = calculateHazardRisk(
+                armPrecision,
+                workerDensity,
+                machineryState
+        );
+
+        if (hazardRisk != -1) {
+            System.out.println("Robot Hazard Risk Score: " + hazardRisk);
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * Calculates hazard risk after validating inputs.
+     * Returns -1 if validation fails.
+     */
+    public static double calculateHazardRisk(
+            double armPrecision,
+            int workerDensity,
+            String machineryState) {
 
         if (armPrecision < 0.0 || armPrecision > 1.0) {
             System.out.println("Error: Arm precision must be between 0.0 and 1.0");
-            return;
+            return -1;
         }
 
         if (workerDensity < 1 || workerDensity > 20) {
             System.out.println("Error: Worker density must be between 1 and 20");
-            return;
+            return -1;
         }
 
         double machineRiskFactor;
@@ -48,17 +70,10 @@ public class FactoryRobotHazardAnalyzer {
             machineRiskFactor = 3.0;
         } else {
             System.out.println("Error: Unsupported machinery state");
-            return;
+            return -1;
         }
 
-        // Hazard Calculation
-
-        double hazardRisk =
-                ((1.0 - armPrecision) * 15.0)
-                        + (workerDensity * machineRiskFactor);
-
-        System.out.println("Robot Hazard Risk Score: " + hazardRisk);
-
-        scanner.close();
+        return ((1.0 - armPrecision) * 15.0)
+                + (workerDensity * machineRiskFactor);
     }
 }
