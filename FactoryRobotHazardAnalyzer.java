@@ -1,49 +1,48 @@
-import java.util.Scanner;
-
 /**
  * FactoryRobotHazardAnalyzer
  *
- * UC2: Accept Robot Hazard Inputs
+ * UC3: Calculate Hazard Risk Score (No Validation)
  *
- * This program collects input values required
- * for hazard analysis from the user.
+ * This program:
+ * - Accepts hazard-related inputs
+ * - Calculates hazard risk using business formula
+ * - Displays computed hazard risk score
  *
- * Current Functionality:
- * - Accept arm precision (double)
- * - Accept worker density (int)
- * - Accept machinery state (String)
- * - Echo inputs back to the user
  */
-
+import java.util.Scanner;
 public class FactoryRobotHazardAnalyzer {
 
     public static void main(String[] args) {
 
-        // Create Scanner object for user input
         Scanner scanner = new Scanner(System.in);
 
-        // Prompt and read arm precision
+        // Collect input
         System.out.println("Enter Arm Precision (0.0 - 1.0):");
         double armPrecision = scanner.nextDouble();
 
-        // Prompt and read worker density
         System.out.println("Enter Worker Density (1 - 20):");
         int workerDensity = scanner.nextInt();
 
-        // Consume leftover newline
         scanner.nextLine();
 
-        // Prompt and read machinery state
         System.out.println("Enter Machinery State (Worn/Faulty/Critical):");
         String machineryState = scanner.nextLine();
 
-        // Echo entered values
-        System.out.println("\nInput Summary:");
-        System.out.println("Arm Precision: " + armPrecision);
-        System.out.println("Worker Density: " + workerDensity);
-        System.out.println("Machinery State: " + machineryState);
+        /*
+         * UC3 Requirement:
+         * No validation yet.
+         * We assume machinery risk factor = 2.0 (temporary).
+         */
+        double machineRiskFactor = 2.0;
 
-        // Close scanner
+        // Hazard Risk Formula
+        double hazardRisk =
+                ((1.0 - armPrecision) * 15.0)
+                        + (workerDensity * machineRiskFactor);
+
+        // Display result
+        System.out.println("Robot Hazard Risk Score: " + hazardRisk);
+
         scanner.close();
     }
 }
