@@ -1,63 +1,71 @@
-import java.util.Scanner;
-
 /**
  * FactoryRobotHazardAnalyzer
  *
- * UC5: Refactor Validation and Calculation into Separate Method
+ * UC6: Introduce Custom Exception for Invalid Input
  *
- * This program:
- * - Collects user input in main()
- * - Delegates validation and hazard calculation to a separate method
- * - Returns hazard risk score if inputs are valid
+ * Concepts Demonstrated:
+ * - Custom Exception
+ * - Exception throwing
+ * - Try-catch handling
+ * - Method abstraction
  */
-
+import java.util.Scanner;
 public class FactoryRobotHazardAnalyzer {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter Arm Precision (0.0 - 1.0):");
-        double armPrecision = scanner.nextDouble();
+        try {
 
-        System.out.println("Enter Worker Density (1 - 20):");
-        int workerDensity = scanner.nextInt();
+            System.out.println("Enter Arm Precision (0.0 - 1.0):");
+            double armPrecision = scanner.nextDouble();
 
-        scanner.nextLine();
+            System.out.println("Enter Worker Density (1 - 20):");
+            int workerDensity = scanner.nextInt();
 
-        System.out.println("Enter Machinery State (Worn/Faulty/Critical):");
-        String machineryState = scanner.nextLine();
+            scanner.nextLine();
 
-        double hazardRisk = calculateHazardRisk(
-                armPrecision,
-                workerDensity,
-                machineryState
-        );
+            System.out.println("Enter Machinery State (Worn/Faulty/Critical):");
+            String machineryState = scanner.nextLine();
 
-        if (hazardRisk != -1) {
+            double hazardRisk = calculateHazardRisk(
+                    armPrecision,
+                    workerDensity,
+                    machineryState
+            );
+
             System.out.println("Robot Hazard Risk Score: " + hazardRisk);
-        }
 
-        scanner.close();
+        } catch (InvalidInputException e) {
+
+            System.out.println("Validation Error: " + e.getMessage());
+
+        } finally {
+            scanner.close();
+        }
     }
 
     /**
-     * Calculates hazard risk after validating inputs.
-     * Returns -1 if validation fails.
+     * Validates input and calculates hazard risk.
+     * Throws InvalidInputException if validation fails.
      */
     public static double calculateHazardRisk(
             double armPrecision,
             int workerDensity,
-            String machineryState) {
+            String machineryState)
+            throws InvalidInputException {
 
         if (armPrecision < 0.0 || armPrecision > 1.0) {
-            System.out.println("Error: Arm precision must be between 0.0 and 1.0");
-            return -1;
+            throw new InvalidInputException(
+                    "Arm precision must be between 0.0 and 1.0"
+            );
         }
 
         if (workerDensity < 1 || workerDensity > 20) {
-            System.out.println("Error: Worker density must be between 1 and 20");
-            return -1;
+            throw new InvalidInputException(
+                    "Worker density must be between 1 and 20"
+            );
         }
 
         double machineRiskFactor;
@@ -69,8 +77,9 @@ public class FactoryRobotHazardAnalyzer {
         } else if (machineryState.equals("Critical")) {
             machineRiskFactor = 3.0;
         } else {
-            System.out.println("Error: Unsupported machinery state");
-            return -1;
+            throw new InvalidInputException(
+                    "Unsupported machinery state"
+            );
         }
 
         return ((1.0 - armPrecision) * 15.0)
