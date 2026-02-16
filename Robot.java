@@ -7,14 +7,14 @@ public class Robot {
 
     private double armPrecision;
     private int workerDensity;
-    private String machineryState;
+    private MachineryState machineryState;
 
     public Robot(double armPrecision,
                  int workerDensity,
-                 String machineryState)
+                 MachineryState machineryState)
             throws InvalidInputException {
 
-        validate(armPrecision, workerDensity, machineryState);
+        validate(armPrecision, workerDensity);
 
         this.armPrecision = armPrecision;
         this.workerDensity = workerDensity;
@@ -22,11 +22,10 @@ public class Robot {
     }
 
     /**
-     * Validates robot hazard parameters.
+     * Validates numeric parameters only.
      */
     private void validate(double armPrecision,
-                          int workerDensity,
-                          String machineryState)
+                          int workerDensity)
             throws InvalidInputException {
 
         if (armPrecision < 0.0 || armPrecision > 1.0) {
@@ -40,15 +39,6 @@ public class Robot {
                     "Worker density must be between 1 and 20"
             );
         }
-
-        if (!machineryState.equals("Worn") &&
-                !machineryState.equals("Faulty") &&
-                !machineryState.equals("Critical")) {
-
-            throw new InvalidInputException(
-                    "Unsupported machinery state"
-            );
-        }
     }
 
     /**
@@ -56,17 +46,7 @@ public class Robot {
      */
     public double calculateHazardRisk() {
 
-        double machineRiskFactor;
-
-        if (machineryState.equals("Worn")) {
-            machineRiskFactor = 1.3;
-        } else if (machineryState.equals("Faulty")) {
-            machineRiskFactor = 2.0;
-        } else {
-            machineRiskFactor = 3.0; // Critical
-        }
-
         return ((1.0 - armPrecision) * 15.0)
-                + (workerDensity * machineRiskFactor);
+                + (workerDensity * machineryState.getRiskFactor());
     }
 }

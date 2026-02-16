@@ -1,14 +1,9 @@
+import java.util.Scanner;
 
 /**
- * UC7: Object-Oriented Refactor
- *
- * Main class now:
- * - Collects user input
- * - Creates Robot object
- * - Delegates hazard calculation to object
- * - Handles exceptions
+ * UC8: Enum-Based Machinery State
  */
-import java.util.Scanner;
+
 public class FactoryRobotHazardAnalyzer {
 
     public static void main(String[] args) {
@@ -25,8 +20,11 @@ public class FactoryRobotHazardAnalyzer {
 
             scanner.nextLine();
 
-            System.out.println("Enter Machinery State (Worn/Faulty/Critical):");
-            String machineryState = scanner.nextLine();
+            System.out.println("Enter Machinery State (WORN/FAULTY/CRITICAL):");
+            String stateInput = scanner.nextLine().toUpperCase();
+
+            MachineryState machineryState =
+                    MachineryState.valueOf(stateInput);
 
             Robot robot = new Robot(
                     armPrecision,
@@ -37,6 +35,10 @@ public class FactoryRobotHazardAnalyzer {
             double hazardRisk = robot.calculateHazardRisk();
 
             System.out.println("Robot Hazard Risk Score: " + hazardRisk);
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println("Invalid machinery state entered.");
 
         } catch (InvalidInputException e) {
 
